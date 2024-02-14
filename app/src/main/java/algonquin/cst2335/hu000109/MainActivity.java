@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString("LoginName", emailAddress);
             editor.putFloat("Hi",4.5f);
-            editor.putInt("Age",34);
+            editor.putInt("Age",32);
             editor.apply();
 
 
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
             // Add additional data
             int age = 32; // replace with the actual age value
             String name = "Danni"; // replace with the actual name value
-            String postalCode = "K2G 6C3123"; // replace with the actual postal code value
+            String postalCode = "K2G 6C3"; // replace with the actual postal code value
 
             nextPage.putExtra("Age", age);
             nextPage.putExtra("Name", name);

@@ -2,71 +2,86 @@ package algonquin.cst2335.hu000109;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
-
+    private static String TAG = "MainActivity";
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Log.w( "MainActivity", "In onCreate() - Loading Widgets" );
-
-        // 在这里初始化 loginButton 并设置点击事件监听器
-        Button loginButton = findViewById(R.id.login);
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // 获取电子邮件地址
-                EditText emailEditText = findViewById(R.id.email);
-                String emailAddress = emailEditText.getText().toString();
-
-                // 创建Intent启动SecondActivity
-                Intent nextPageIntent = new Intent(MainActivity.this, SecondActivity.class);
-                nextPageIntent.putExtra("EmailAddress", "123@abc.com"); // 将电子邮件地址作为额外信息传递
-                startActivity(nextPageIntent); // 启动SecondActivity
-            }
-        });
-
+    protected void onResume() {
+        super.onResume();
+        Log.w( TAG, "In onResume() - The application is now responding to user input" );
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        Log.w( "MainActivity", "In onStart() - Registering Listeners" );
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.w( "MainActivity", "In onResume() - Starting the App" );
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.w( "MainActivity", "In onPause() - Stopping the App" );
+        Log.w( TAG, "In onStart() - The application is now visible on screen" );
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        Log.w( "MainActivity", "In onStop() - Unregistering Listeners" );
+        Log.w( TAG, "In onStop() - The application is no longer visible." );
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.w( "MainActivity", "In onDestroy() - Cleaning Up" );
+        Log.w( TAG, "In onDestroy() - Any memory used by the application is freed." );
     }
 
-    Button loginButton = findViewById(R.id.login);
-
-
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.w( TAG, "In onPause() - The application no longer responds to user input" );
     }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        Log.w( TAG, "In onCreate() - Loading Widgets" );
+        SharedPreferences prefs = getSharedPreferences("MyData", Context.MODE_PRIVATE);
+
+        Button loginButton = findViewById(R.id.buttonLogin);
+        TextView editTextEmail = findViewById(R.id.editTextEmail);
+
+        String savedEmailAddress = prefs.getString("LoginName", "");
+        editTextEmail.setText(savedEmailAddress);
+
+        loginButton.setOnClickListener(v -> {
+            String emailAddress = editTextEmail.getText().toString();
+
+            // Save the email address to SharedPreferences
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString("LoginName", emailAddress);
+            editor.putFloat("Hi",4.5f);
+            editor.putInt("Age",34);
+            editor.apply();
+
+
+            // Create an Intent and add the email address as an extra
+            Intent nextPage = new Intent(MainActivity.this, SecondActivity.class);
+            nextPage.putExtra("EmailAddress", emailAddress);
+
+            // Add additional data
+            int age = 32; // replace with the actual age value
+            String name = "Danni"; // replace with the actual name value
+            String postalCode = "K2G 6C3123"; // replace with the actual postal code value
+
+            nextPage.putExtra("Age", age);
+            nextPage.putExtra("Name", name);
+            nextPage.putExtra("PostalCode", postalCode);
+            // Start the transition to SecondActivity
+            startActivity(nextPage);
+        });
+    }
+
+
+}

@@ -1,5 +1,16 @@
 <resources>
-    <string name="app_name">Danni\'s Android Labs</string>
+    <string name="app_name">Pawinee\'s Android Labs</string>
     <string name="hello_message">Hello world!</string>
     <string name="button_message">I\'m a button</string>
+    <string name="textViewMail_message">Enter your email address:</string>
+    <string name="hintMail_message">Type email here</string>
+    <string name="textViewPassword_message">Type your password:</string>
+    <string name="hintPassword_message">Type password here</string>
+    <string name="button_login">Login</string>
+
+    <string name="title_secondPage">Adding functions</string>
+    <string name="hintPhone_message">Phone Number</string>
+    <string name="button_call">Call number</string>
+
+    <string name="button_changePic">Change picture</string>
 </resources>

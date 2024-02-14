@@ -1,62 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SecondActivity">
+    android:padding="16dp">
 
+    <!-- TextView at the top -->
+    <TextView
+        android:id="@+id/textViewTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="32dp"
+        android:text="@string/title_secondPage"
+        android:textSize="24sp" />
 
-    <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <!-- Second row with Phone inputType EditText and "Call number" button -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/secondRowLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="16dp">
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textViewTitle"
+        android:layout_marginTop="16dp">
 
-        <!-- 居中的 TextView -->
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TextView"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="32dp"/>
-
-        <!-- 电话号码输入 EditText -->
+        <!-- Phone inputType EditText -->
         <EditText
             android:id="@+id/editTextPhone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
             android:inputType="phone"
-            android:layout_below="@id/textView"
-            android:layout_marginTop="16dp"/>
+            android:hint="@string/hintPhone_message"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/buttonCallNumber"
+            android:layout_marginEnd="8dp"/>
 
-        <!-- 带有图像的 ImageView -->
-        <ImageView
-            android:id="@+id/imageViewCamera"
+        <!-- "Call number" button -->
+        <Button
+            android:id="@+id/buttonCallNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/button_call"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Third row with ImageView and "Change picture" button -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/thirdRowLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/secondRowLayout"
+        android:layout_marginTop="16dp">
+
+        <!-- ImageView with ic_menu_camera -->
+        <ImageView
+            android:id="@+id/imageViewCamera"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:src="@android:drawable/ic_menu_camera"
-            android:layout_centerInParent="true"/>
+            app:srcCompat="@android:drawable/ic_menu_camera"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/buttonChangePicture"
+            android:layout_marginEnd="8dp"/>
 
-        <!-- "CALL NUMBER" 按钮 -->
-        <Button
-            android:id="@+id/buttonCall"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="CALL NUMBER"
-            android:layout_below="@id/imageViewCamera"
-            android:layout_marginTop="16dp"/>
-
-        <!-- "CHANGE PICTURE" 按钮 -->
+        <!-- "Change picture" button -->
         <Button
             android:id="@+id/buttonChangePicture"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="CHANGE PICTURE"
-            android:layout_below="@id/buttonCall"
-            android:layout_marginTop="8dp"/>
-    </RelativeLayout>
+            android:text="@string/button_changePic"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

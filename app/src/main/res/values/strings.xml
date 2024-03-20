@@ -1,9 +1,13 @@
 <resources>
     <string name="app_name">Danni\'s Android Labs</string>
-    <string name="hello_message" translatable="false">Type your Password</string>
-    <string name="button_message" translatable="false">LOGIN</string>
-    <string name="password" translatable="false">Enter Password Here</string>
-    <string name="password_meets_requirements" translatable="false">Your password meets the requirements</string>
-    <string name="password_does_not_meet_requirements" translatable="false">You shall not pass!</string>
-    <string name="password_not_complex_enough" translatable="false">Your password is not complex enough</string>
+    <string name="hello_message">Hello World!</string>
+    <string name="button_message">I\'m a button</string>
+
+    <string name="message_placeholder" translatable="false">Message goes here</string>
+    <string name="time_placeholder" translatable="false">Time goes here</string>
+    <string name="send" translatable="false">Send</string>
+    <string name="enter_your_message" translatable="false">"textInput "</string>
+    <string name="receive" translatable="false">RECEIVE</string>
+    <string name="avatar_description" translatable="false">Avatar Image</string>
+
 </resources>

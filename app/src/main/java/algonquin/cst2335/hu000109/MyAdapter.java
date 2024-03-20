@@ -1,44 +1,76 @@
 package algonquin.cst2335.hu000109;
 
-
+import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
-
-import androidx.annotation.NonNull;
-import androidx.databinding.DataBindingUtil;
-import androidx.databinding.ViewDataBinding;
-import androidx.recyclerview.widget.RecyclerView;
-
+import android.widget.ImageView;
+import android.widget.TextView;
 import java.util.ArrayList;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.snackbar.Snackbar;
 
-import algonquin.cst2335.hu000109.databinding.ReceiveMessageBinding;
-import algonquin.cst2335.hu000109.databinding.SentMessageBinding;
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.BaseMessageViewHolder> {
+
+public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyRowHolder> {
 
     private final ArrayList<ChatMessage> messages;
+    private final Context context;
 
-    public MyAdapter(ArrayList<ChatMessage> messages) {
+    public MyAdapter(Context context, ArrayList<ChatMessage> messages) {
+        this.context = context;
         this.messages = messages;
     }
 
+    public void addMessage(ChatMessage message) {
+        messages.add(message);
+        notifyItemInserted(messages.size() - 1);
+    }
+
+    public void setMessages(ArrayList<ChatMessage> newMessages) {
+        this.messages.clear(); // Clear existing messages
+        this.messages.addAll(newMessages); // Add all new messages
+        notifyDataSetChanged(); // Notify the adapter to refresh the list
+    }
+
+
     @NonNull
     @Override
-    public BaseMessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MyRowHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-
-        if (viewType == MyAdapterItemType.SENT.ordinal()) {
-            SentMessageBinding binding = DataBindingUtil.inflate(inflater, R.layout.sent_message, parent, false);
-            return new SentMessageViewHolder(binding);
+        View view;
+        if (viewType == 0) {
+            view = inflater.inflate(R.layout.sent_message, parent, false);
         } else {
-            ReceiveMessageBinding binding = DataBindingUtil.inflate(inflater, R.layout.receive_message, parent, false);
-            return new ReceiveMessageViewHolder(binding);
+            view = inflater.inflate(R.layout.receive_message, parent, false);
         }
+        return new MyRowHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull BaseMessageViewHolder holder, int position) {
-        holder.bind(messages.get(position));
+    public void onBindViewHolder(@NonNull MyRowHolder holder, int position) {
+        ChatMessage message = messages.get(position);
+        holder.messageText.setText(message.getMessage());
+        holder.timeText.setText(message.getTimeSent());
+
+        if (message.isSent()) {
+            holder.avatarImageView.setImageResource(R.drawable.send_image);
+            holder.messageText.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
+        } else {
+            holder.avatarImageView.setImageResource(R.drawable.receive_image);
+            holder.messageText.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+        }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDeleteDialog(holder.getAdapterPosition());
+            }
+        });
     }
 
     @Override
@@ -48,48 +80,49 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.BaseMessageViewHol
 
     @Override
     public int getItemViewType(int position) {
-        return messages.get(position).isSentButton() ? MyAdapterItemType.SENT.ordinal() : MyAdapterItemType.RECEIVE.ordinal();
-    }
-
-    abstract static class BaseMessageViewHolder extends RecyclerView.ViewHolder {
-        public BaseMessageViewHolder(ViewDataBinding binding) {
-            super(binding.getRoot());
-        }
-
-        public abstract void bind(ChatMessage message);
-    }
-
-    public static class SentMessageViewHolder extends BaseMessageViewHolder {
-        private final SentMessageBinding binding;
-
-        public SentMessageViewHolder(SentMessageBinding binding) {
-            super(binding);
-            this.binding = binding;
-        }
-
-        @Override
-        public void bind(ChatMessage message) {
-            binding.setChatMessage(message);
-            binding.executePendingBindings();
+        if (messages.get(position).isSent()) {
+            return 0;
+        } else {
+            return 1;
         }
     }
 
-    private static class ReceiveMessageViewHolder extends BaseMessageViewHolder {
-        private final ReceiveMessageBinding binding;
+    private void showDeleteDialog(int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Delete Message");
+        builder.setMessage("Do you want to delete this message?");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ChatMessage removedMessage = messages.remove(position);
+                notifyItemRemoved(position);
+                notifyItemRangeChanged(position, messages.size());
 
-        public ReceiveMessageViewHolder(ReceiveMessageBinding binding) {
-            super(binding);
-            this.binding = binding;
-        }
-
-        @Override
-        public void bind(ChatMessage message) {
-            binding.setChatMessage(message);
-            binding.executePendingBindings();
-        }
+                Snackbar.make(((Activity) context).findViewById(android.R.id.content),
+                                String.format("You deleted message #%d", position + 1), Snackbar.LENGTH_SHORT)
+                        .setAction("Undo", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                messages.add(position, removedMessage);
+                                notifyItemInserted(position);
+                            }
+                        }).show();
+            }
+        });
+        builder.setNegativeButton("No", null);
+        builder.show();
     }
 
-    private enum MyAdapterItemType {
-        SENT, RECEIVE
+    public static class MyRowHolder extends RecyclerView.ViewHolder {
+        TextView messageText;
+        TextView timeText;
+        ImageView avatarImageView;
+
+        public MyRowHolder(@NonNull View itemView) {
+            super(itemView);
+            messageText = itemView.findViewById(R.id.message);
+            timeText = itemView.findViewById(R.id.time);
+            avatarImageView = itemView.findViewById(R.id.avatarImageView);
+        }
     }
 }

@@ -4,9 +4,12 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 @Entity
 public class ChatMessage {
-
     @PrimaryKey(autoGenerate = true)
     public int id;
 
@@ -17,13 +20,12 @@ public class ChatMessage {
     public final String timeSent;
 
     @ColumnInfo(name ="IsSentButton")
-    private final boolean isSentButton;
+    private final boolean isSent;
 
-
-    public ChatMessage(String message, String timeSent, boolean isSentButton) {
+    public ChatMessage(String message, String timeSent, boolean isSent) {
         this.message = message;
         this.timeSent = timeSent;
-        this.isSentButton = isSentButton;
+        this.isSent = isSent;
     }
 
     public String getMessage() {
@@ -35,21 +37,23 @@ public class ChatMessage {
     }
 
     public String getFormattedTime() {
-        return timeSent;
+        return new SimpleDateFormat("EEEE, dd-MMM-yyyy hh-mm-ss a", Locale.getDefault()).format(new Date(Long.parseLong(timeSent)));
     }
 
-    public boolean isSentButton() {
-        return isSentButton;
+    public boolean isSent() {
+        return isSent;
     }
 
-    public static ChatMessage createSentMessage(String message) {
-        String currentDateAndTime = getCurrentDateAndTime();
-        return new ChatMessage(message, currentDateAndTime, true);
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public static ChatMessage createReceiveMessage(String message) {
-        String currentDateAndTime = getCurrentDateAndTime();
-        return new ChatMessage(message, currentDateAndTime, false);
+    public static ChatMessage createSentMessage(String message, String timeSent) {
+        return new ChatMessage(message, timeSent, true);
+    }
+
+    public static ChatMessage createReceiveMessage(String message, String timeSent) {
+        return new ChatMessage(message, timeSent, false);
     }
 
     private static String getCurrentDateAndTime() {

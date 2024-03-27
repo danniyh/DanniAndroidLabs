@@ -12,5 +12,5 @@
 
 
     <string name="delete_item" translatable="false">delete_item</string>
-    <string name="item_2" translatable="false">item_2</string>
+    <string name="item_2" translatable="false">about</string>
 </resources>

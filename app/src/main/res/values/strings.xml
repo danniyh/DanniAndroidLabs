@@ -10,4 +10,7 @@
     <string name="receive" translatable="false">RECEIVE</string>
     <string name="avatar_description" translatable="false">Avatar Image</string>
 
+
+    <string name="delete_item" translatable="false">delete_item</string>
+    <string name="item_2" translatable="false">item_2</string>
 </resources>
